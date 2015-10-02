@@ -13,10 +13,12 @@ describe('PactResource', () => {
 
   const sendSpy = sinon.stub().returns(reqMethods);
   const authSpy = sinon.stub().returns(reqMethods);
+  const onSpy = sinon.stub().returns(reqMethods);
   const endSpy = sinon.stub().returns(reqMethods);
 
   reqMethods.send = sendSpy;
   reqMethods.auth = authSpy;
+  reqMethods.on = onSpy;
   reqMethods.end = endSpy;
 
   describe('Constructor', () => {
@@ -136,6 +138,21 @@ describe('PactResource', () => {
       });
       instance._request('post', '/testPath');
       assert.notOk(authSpy.called);
+
+      const fakes = {
+        token: 'fakeToken',
+      };
+      instance = new PactResource({
+        pactAPI: {
+          getAPIField: (key) => fakes[key],
+        },
+        path: mockPath,
+      });
+      instance._request('post', '/testPath');
+      assert.ok(authSpy.called);
     });
+
+    it('Calls the error handler if there is one');
+    // In future we can implement nock instead of stubbing superagent
   });
 });

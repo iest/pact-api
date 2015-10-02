@@ -68,6 +68,7 @@ export default class PactResource {
     const base = this._pactAPI.getAPIField('base');
     const version = this._pactAPI.getAPIField('version');
     const token = this._pactAPI.getAPIField('token');
+    const errorHandler = this._pactAPI.getAPIField('errorHandler');
     const url = `${base}/${version}${path}`;
 
     return new Promise((resolve, reject) => {
@@ -80,6 +81,9 @@ export default class PactResource {
       }
       req.end((err, res) => {
         if (err) {
+          if (errorHandler) {
+            errorHandler(err);
+          }
           reject(err);
           return;
         }

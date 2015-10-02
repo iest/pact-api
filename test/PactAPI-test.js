@@ -6,6 +6,7 @@ describe('PactAPI', () => {
   const fakeBase = 'Where did you get those clothes? At the toilet store?';
   const fakeToken = 'Dorothy Mantooth is a saint';
   const fakeVersion = 'Baxter';
+  const fakeHandler = () => 'Go back to your home on whore island';
 
   beforeEach(() => {
     instance = new PactAPI();
@@ -33,6 +34,12 @@ describe('PactAPI', () => {
       instance.setAPIToken(fakeToken);
       assert.equal(instance._api.token, fakeToken);
     });
+    it('Allows a falsy value', () => {
+      instance.setAPIToken(false);
+      assert.equal(instance._api.token, false);
+      instance.setAPIToken(undefined);
+      assert.equal(instance._api.token, undefined);
+    })
   });
 
   describe('setAPIBase', () => {
@@ -49,14 +56,23 @@ describe('PactAPI', () => {
     });
   });
 
+  describe('setErrorHandler', () => {
+    it('Sets the given callback as an error handler on the instance', () => {
+      instance.setErrorHandler(fakeHandler);
+      assert.equal(instance._api.errorHandler, fakeHandler);
+    });
+  });
+
   describe('getAPIField', () => {
     it('Returns the given field from the instance', () => {
       instance.setAPIBase(fakeBase);
       instance.setAPIToken(fakeToken);
       instance.setAPIVersion(fakeVersion);
+      instance.setErrorHandler(fakeHandler);
       assert.equal(instance.getAPIField('base'), fakeBase);
       assert.equal(instance.getAPIField('token'), fakeToken);
       assert.equal(instance.getAPIField('version'), fakeVersion);
+      assert.equal(instance.getAPIField('errorHandler'), fakeHandler);
     });
   });
 

@@ -39,15 +39,18 @@ export default class PactAPI {
     }
   }
   setAPIToken(token) {
-    if (token) {
-      this._api.token = token;
-      this._prepResources();
-    }
+    this._api.token = token;
+    this._prepResources();
   }
   setAPIBase(base) {
     if (base) {
       this._api.base = base;
       this._prepResources();
+    }
+  }
+  setErrorHandler(callback) {
+    if (callback && typeof callback === 'function') {
+      this._api.errorHandler = callback;
     }
   }
   _prepResources() {
